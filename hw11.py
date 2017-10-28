@@ -1,5 +1,5 @@
 # hw11.py
-# Chris Monico, 11/1/15
+# Derrell Dunn
 
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
