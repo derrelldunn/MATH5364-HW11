@@ -1,9 +1,8 @@
 # hw11.py
 # Derrell Dunn
-
+#Math 5364
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
-
 
 ##################################
 ###### Game of Life class.  ######
@@ -67,11 +66,6 @@ class GOL:
     def generation(self):
         return self.generation
 
-   
-
-
-
-
 
 #####################################################
 ## Do not change anything below here!! Feel free   ##
@@ -86,8 +80,10 @@ class Plot:
         self.w = Canvas(self.master, width=self.canvasW, height=self.canvasH)
         self.w.pack()
 
+
     def update_screen(self):
         self.master.update_idletasks()
+
 
     def clear_screen(self, color):
         # First destroy the previous canvas widget to free up the
@@ -97,6 +93,7 @@ class Plot:
         self.w.pack()
         # Now fill the entire screen with a solid color
         self.w.create_rectangle(0,0,self.canvasW-1,self.canvasH-1,fill=color)
+
 
     def draw_grid(self, rowHeights, columnWidths, color):
         W = self.canvasW
@@ -112,29 +109,38 @@ class Plot:
             self.w.create_line(0,r,W-1,r,fill=color)
             r += rowHeights
 
+
     def label_screen(self, color, label):
         self.w.create_text(0, 0, text=label,anchor="nw",fill=color) 
-        
+
+
     def plotPoint(self,x, y, color):
         self.w.create_rectangle(x-0.5, y-0.5, x+0.5, y+0.5, fill=color,outline=color)
+
 
     def plotCell(self, r, c, height, width,color):
         padW = 0.1*width
         padH = 0.1*height
         self.w.create_oval(c*width+padW, r*height+padH, (c+1)*width-padW, (r+1)*height-padH, fill=color,outline=color)
 
+
     def pixelW(self):
         # Gives the width of each pixel in Cartesian coordinates.
         return (self.BR_x - self.TL_x)/float(self.cavasW)
+
 
     def pixelH(self):
         # Gives the height of each pixel in Cartesian coordinates.
         return (self.TR_y - self.BL_y)/float(self.canvasH)
 
+
     def canvas_width(self):
         return self.canvasW
+
+
     def canvas_height(self):
         return self.canvasH
+
 
     def canvas_to_cartesian(self, pixelX, pixelY):
         # Returns Cartesian coordinates associated with (a corner of)
@@ -144,7 +150,6 @@ class Plot:
         return [x,y]
 
 
- 
 ########################################################
 def colorFromRGB(r, g, b):
     # R, G, B are floating point numbers between 0 and 1 describing
@@ -157,6 +162,7 @@ def colorFromRGB(r, g, b):
             X[i]=255
     color = "#%02x%02x%02x"%(X[0],X[1],X[2])
     return color
+
 
 #####################################################
 def drawScreen(n):
