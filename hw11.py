@@ -1,8 +1,22 @@
 # hw11.py
 # Derrell Dunn
-#Math 5364
+# Math 5364
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
+from copy import deepcopy
+from collections import OrderedDict
+
+# Define Readability constants
+LIVE_CELL = 1  # Living cell
+DEAD_CELL = 0  # Dead cell
+LEFT_WRAP_EDGE = -1  # leftmost edge of array
+RIGHT_WRAP_EDGE = 43  # rightmost edge of array
+TOP_ROWWRAP_EDGE = -1  # top row of array
+BOTTOM_ROWWRAP_EDGE = 22  # bottom row of array
+TOP_ROW = 0
+BOTTOM_ROW = 21
+LEFT_COLUMN = 0
+RIGHT_COLUMN = 42
 
 ##################################
 ###### Game of Life class.  ######
@@ -18,36 +32,87 @@ class GOL:
         except:
             print "Could not open file '%s' for reading!" % (filename)
             return
-        i = 0 # This will be the index of the row we're currently reading from file.
+        i = 0  # This will be the index of the row we're currently reading from file.
         for line in infile:
             thisRow = line.strip() # Removing trailing newline character.
             N = len(thisRow)
             # Bookkeeping: the grid size will be the minimum necessary
             # to accomodate all of the nonempty lines.
-            if N>self.cols:
+            if N > self.cols:
                 self.cols = N
-            if N>0:
+            if N > 0:
                 self.rows = i+1
                 
             for j in range(N):
-                self.board[i,j]=0
-                if thisRow[j]=='1':
-                    self.board[i,j]=1
+                self.board[i, j] = DEAD_CELL
+                if thisRow[j] == '1':
+                    self.board[i, j] = LIVE_CELL
             i += 1
         infile.close()
 
-    def neighbors(self, i, j):
+    def neighbors(self, row, column):
         # Write this function, as described in the assignment file.
         # It should return the number of live neighbors of the
         # cell self.board[i,j].
-        return 0
 
-    def nextGeneration(self):
+        offsets = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+        maxrow, maxcolumn = 21, 42
+  
+        count = 0
+        for f in sorted(set(self.board)):
+            print(f)
+            # if ()
+        working_copy = OrderedDict((key, self.board[key]) for key in sorted(self.board))
+        modified_copy = deepcopy(working_copy)
+        '''
+        i_s = range(1, 11)
+        x_s = range(1, 11)
+        # x_s = range(11, 1, -1) # Also works
+        d = dict([(i_s[index], x_s[index],) for index in range(len(i_s))])
+        '''
+        for rowes, coles in working_copy.iterkeys():
+            if rowes is BOTTOM_ROW:
+                  print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes,coles], rowes,
+                                                                                       coles)
+                  modified_copy[TOP_ROWWRAP_EDGE,coles]= working_copy[rowes, coles]
+            if rowes is TOP_ROW:
+                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
+                                                                                     coles)
+                modified_copy[BOTTOM_ROWWRAP_EDGE, coles] = working_copy[rowes, coles]
+            if coles is RIGHT_COLUMN:
+                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
+                                                                                     coles)
+                modified_copy[rowes, LEFT_WRAP_EDGE] = working_copy[rowes, coles]
+            if coles is LEFT_COLUMN:
+                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
+                                                                                     coles)
+                modified_copy[rowes, RIGHT_WRAP_EDGE] = working_copy[rowes, coles]
+        for rws, colms in modified_copy.iterkeys():
+            print 'this is the MOdified {} corresponding to row{} column {}'.format(modified_copy[rws, colms], rws,
+                                                                                 colms)
+        #Sort again for efficiency
+        modified_copy = OrderedDict((key, modified_copy[key]) for key in sorted(modified_copy))
+        print 'Sorted FINAL copy'
+        for f in modified_copy:
+            print f
+        #Let's look for living neighbors!!
+        for offset in offsets:
+            r = row + offset[0]
+            c = column + offset[1]
+            if (0 <= r < maxrow) and (0 <= c < maxcolumn) and modified_copy[row, column] == LIVE_CELL:
+                count += 1
+        return count
+
+    def  nextGeneration(self):
         # Write this function, as described in the assignment file.
-
-        # leave this next line at the end of this function; 
+        # leave this next line at the end of this function;
         # it's how we keep track of the generation we're 
         # on so we can report it on the screen, but that's all it's used for.
+        newboard = deepcopy(self)
+        row = 3
+        column = 4
+        GOL.neighbors(newboard, row, column)
+        print 'after call to neighbors'
         self.generation += 1
 
 
@@ -59,7 +124,7 @@ class GOL:
 
     def isAlive(self, row, col):
         if (row>=0) and (row<self.rows) and (col>=0) and (col<self.cols):
-            if self.board[row,col]==1:
+            if self.board[row,col] is LIVE_CELL:
                 return True
         return False
 
