@@ -2,6 +2,7 @@
 # Derrell Dunn
 # Math 5364
 # This is where we're getting the fancy graphics stuff we need.
+
 from Tkinter import *
 from copy import deepcopy
 from collections import OrderedDict
@@ -10,13 +11,13 @@ from collections import OrderedDict
 LIVE_CELL = 1  # Living cell
 DEAD_CELL = 0  # Dead cell
 LEFT_WRAP_EDGE = -1  # leftmost edge of array
-RIGHT_WRAP_EDGE = 43  # rightmost edge of array
+RIGHT_WRAP_EDGE = 8#43  # rightmost edge of array
 TOP_ROWWRAP_EDGE = -1  # top row of array
-BOTTOM_ROWWRAP_EDGE = 22  # bottom row of array
+BOTTOM_ROWWRAP_EDGE = 8#22  # bottom row of array
 TOP_ROW = 0
-BOTTOM_ROW = 21
+BOTTOM_ROW = 7#21
 LEFT_COLUMN = 0
-RIGHT_COLUMN = 42
+RIGHT_COLUMN = 7#42
 
 ##################################
 ###### Game of Life class.  ######
@@ -24,6 +25,8 @@ RIGHT_COLUMN = 42
 class GOL:
     def __init__(self, filename):
         self.board = {}
+        self.newboard = {}
+        self.revboard = OrderedDict()
         self.rows = 0
         self.cols = 0
         self.generation = 1
@@ -54,66 +57,87 @@ class GOL:
         # Write this function, as described in the assignment file.
         # It should return the number of live neighbors of the
         # cell self.board[i,j].
-
         offsets = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
-        maxrow, maxcolumn = 21, 42
-  
-        count = 0
-        for f in sorted(set(self.board)):
-            print(f)
-            # if ()
-        working_copy = OrderedDict((key, self.board[key]) for key in sorted(self.board))
-        modified_copy = deepcopy(working_copy)
-        '''
-        i_s = range(1, 11)
-        x_s = range(1, 11)
-        # x_s = range(11, 1, -1) # Also works
-        d = dict([(i_s[index], x_s[index],) for index in range(len(i_s))])
-        '''
-        for rowes, coles in working_copy.iterkeys():
-            if rowes is BOTTOM_ROW:
-                  print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes,coles], rowes,
-                                                                                       coles)
-                  modified_copy[TOP_ROWWRAP_EDGE,coles]= working_copy[rowes, coles]
-            if rowes is TOP_ROW:
-                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
-                                                                                     coles)
-                modified_copy[BOTTOM_ROWWRAP_EDGE, coles] = working_copy[rowes, coles]
-            if coles is RIGHT_COLUMN:
-                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
-                                                                                     coles)
-                modified_copy[rowes, LEFT_WRAP_EDGE] = working_copy[rowes, coles]
-            if coles is LEFT_COLUMN:
-                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
-                                                                                     coles)
-                modified_copy[rowes, RIGHT_WRAP_EDGE] = working_copy[rowes, coles]
-        for rws, colms in modified_copy.iterkeys():
-            print 'this is the MOdified {} corresponding to row{} column {}'.format(modified_copy[rws, colms], rws,
-                                                                                 colms)
-        #Sort again for efficiency
-        modified_copy = OrderedDict((key, modified_copy[key]) for key in sorted(modified_copy))
-        print 'Sorted FINAL copy'
-        for f in modified_copy:
-            print f
+        #dmaxrow, dmaxcol = 21, 42
+        dmaxrow = G.numRows()
+        dmaxcol = G.numCols()
+        row, column, count = 0, 0, 0
+
         #Let's look for living neighbors!!
         for offset in offsets:
             r = row + offset[0]
             c = column + offset[1]
-            if (0 <= r < maxrow) and (0 <= c < maxcolumn) and modified_copy[row, column] == LIVE_CELL:
+            if (0 <= r < dmaxrow-1) and (0 <= c < dmaxcol-1) and self.board[row, column] == LIVE_CELL:
                 count += 1
         return count
 
+
+    @property
     def  nextGeneration(self):
         # Write this function, as described in the assignment file.
         # leave this next line at the end of this function;
         # it's how we keep track of the generation we're 
         # on so we can report it on the screen, but that's all it's used for.
-        newboard = deepcopy(self)
-        row = 3
-        column = 4
-        GOL.neighbors(newboard, row, column)
+
+        working_copy = deepcopy(self)
+        row, column, count = 0, 0, 0
+        dmaxrow = G.numRows()-1
+        dmaxcol = G.numCols()-1
+
+        working_copy = OrderedDict((key, self.board[key]) for key in sorted(self.board))
+        modified_copy = deepcopy(working_copy)
+        # Setup the new "wrapped" board
+        for rowes, coles in working_copy.iterkeys():
+            # copy right column to new left column
+            if coles is RIGHT_COLUMN:
+                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
+                                                                                 coles)
+                modified_copy[rowes, LEFT_WRAP_EDGE] = working_copy[rowes, coles]
+            # copy left column to right column
+            if coles is LEFT_COLUMN:
+                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
+                                                                                 coles)
+                modified_copy[rowes, RIGHT_WRAP_EDGE] = working_copy[rowes, coles]
+
+        for rowes, coles in working_copy.iterkeys():
+            # copy bottom row to new top row
+            if rowes is BOTTOM_ROW:
+                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
+                                                                                     coles)
+                modified_copy[TOP_ROWWRAP_EDGE, coles] = working_copy[rowes, coles]
+            # copy top row to new bottom row
+            if rowes is TOP_ROW:
+                print 'this is the value {} corresponding to row{} column {}'.format(working_copy[rowes, coles], rowes,
+                                                                                     coles)
+                modified_copy[BOTTOM_ROWWRAP_EDGE, coles] = working_copy[rowes, coles]
+
+                # Sort again for efficiency
+        modified_copy = OrderedDict((key, modified_copy[key]) for key in sorted(modified_copy))
+        for rws, colms in modified_copy.iterkeys():
+            print 'this is the Modified {} corresponding to row{} column {}'.format(modified_copy[rws, colms], rws,
+                                                                                    colms)
+        self.board = modified_copy
+        self.newboard = deepcopy(self.board)
+
+        for r in range(dmaxrow-1):
+            for c in range(dmaxcol-1):
+                neighbors = GOL.neighbors(self, r, c)
+                if self.newboard[r, c] == LIVE_CELL and neighbors < 2:
+                    self.newboard[r, c] = DEAD_CELL
+                elif self.newboard[r, c] == LIVE_CELL and neighbors > 4:
+                    self.newboard[r, c] = DEAD_CELL
+                elif self.newboard[r,c] == LIVE_CELL and (2 <= neighbors <= 3):
+                    self.newboard[r,c] = LIVE_CELL
+                elif self.newboard[r, c] == DEAD_CELL and neighbors == 3:
+                    self.newboard[r, c] = LIVE_CELL
+                elif self.newboard[r,c] == DEAD_CELL and not(neighbors == 3):
+                    self.newboard[r,c] = DEAD_CELL
+       
+        self.board = self.newboard
+
         print 'after call to neighbors'
         self.generation += 1
+        #return True
 
 
     def numRows(self):
@@ -257,7 +281,7 @@ def drawScreen(n):
     updates = 0
     while not(done):
         if (updates < n):
-            G.nextGeneration()
+            G.nextGeneration
             updates += 1
         myPlot.clear_screen(deadColor)
         myPlot.draw_grid(rowheight, colwidth, gridColor)
@@ -277,7 +301,7 @@ def drawScreen(n):
 ###########################################
 ### Entry point. Execution begins here. ###
 ###########################################
-G = GOL("input.txt") # Load the input file.
+G = GOL("sample.txt") # Load the input file.
 
 myPlot = Plot() # This creates an object which holds the canvas widget that we draw on.
 
