@@ -4,6 +4,12 @@
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
 
+# Define Readability constants
+LIVE_CELL = 1  # Living cell
+DEAD_CELL = 0  # Dead cell
+TOP_ROW = 0
+LEFT_COLUMN = 0
+
 ##################################
 ###### Game of Life class.  ######
 ##################################
