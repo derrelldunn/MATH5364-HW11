@@ -55,6 +55,7 @@ class GOL:
         # cell self.board[i,j].
         rows = G.numRows()
         cols = G.numCols()
+        row_piv, col_piv = i, j
         count = 0
         for i in range(rows):
             for j in range(cols):
@@ -70,7 +71,7 @@ class GOL:
         for offset in offsets:
             r = rows + offset[0]
             c = cols + offset[1]
-            if (0 <= r < rows) and (0 <= c < cols - 1) and self.board[r, c] == LIVE_CELL:
+            if (0 <= r < rows) and (0 <= c < cols - 1) and self.board[row_piv, col_piv] == LIVE_CELL:
                 count += 1
         return count
 
@@ -245,7 +246,7 @@ def drawScreen(n):
 ###########################################
 ### Entry point. Execution begins here. ###
 ###########################################
-G = GOL("input.txt") # Load the input file.
+G = GOL("sample.txt") # Load the input file.
 
 myPlot = Plot() # This creates an object which holds the canvas widget that we draw on.
 
