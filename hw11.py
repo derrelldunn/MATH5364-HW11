@@ -73,9 +73,10 @@ class GOL:
 
         # Let's look for living neighbors!!
         for offset in offsets:
-            r = i + offset[0]
-            c = j + offset[1]
-            if (0 <= r < rows) and (0 <= c < cols ) and self.board[r, c] == LIVE_CELL:
+            #r = i + offset[0]
+            #c = j + offset[1]
+            #if (0 <= r < rows) and (0 <= c < cols ) and self.board[r, c] == LIVE_CELL:
+            if self.board[offset[0], offset[1]] is LIVE_CELL:
                 count += 1
         return count
 
@@ -90,18 +91,18 @@ class GOL:
         dmaxrow = G.numRows()
         dmaxcol = G.numCols()
 
-        for r in range(dmaxrow ):
+        for r in range(dmaxrow):
             for c in range(dmaxcol):
                 neighbors = GOL.neighbors(self, r, c)
                 if self.board[r, c] == LIVE_CELL and neighbors < 2:
                     self.newboard[r, c] = DEAD_CELL
-                elif self.board[r, c] == LIVE_CELL and neighbors > 4:
+                elif self.board[r, c] == LIVE_CELL and neighbors >= 4:
                     self.newboard[r, c] = DEAD_CELL
-                elif self.board[r, c] == LIVE_CELL and (2 <= neighbors <= 3):
+                elif self.board[r, c] == LIVE_CELL and ((neighbors is 2) or (neighbors is 3)):
                     self.newboard[r, c] = LIVE_CELL
-                elif self.board[r, c] == DEAD_CELL and neighbors == 3:
+                elif self.board[r, c] == DEAD_CELL and neighbors is 3:
                     self.newboard[r, c] = LIVE_CELL
-                elif self.board[r, c] == DEAD_CELL and not (neighbors == 3):
+                elif self.board[r, c] == DEAD_CELL and not (neighbors is 3):
                     self.newboard[r, c] = DEAD_CELL
 
         self.board = self.newboard
