@@ -1,6 +1,7 @@
 # hw11.py
-# Derrell Dunn
+#Derrell Dunn
 #Math 5364
+#UPDATED WORKING VERSION!!!!!
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
 from copy import deepcopy
@@ -43,7 +44,7 @@ class GOL:
             for j in range(N):
                 self.board[i,j]=0
                 if thisRow[j]=='1':
-                    self.board[i,j]=1
+                    self.board[i,j]=LIVE_CELL
             i += 1
         infile.close()
 
@@ -55,42 +56,42 @@ class GOL:
 
 
     def neighbors(self, i, j):
-        # Write this function, as described in the assignment file.
-        # It should return the number of live neighbors of the
-        # cell self.board[i,j].
+        ''' should return the number of live neighbors of the
+         cell self.board[i,j].'''
+
+        #Read in rows and columns, No hard coding here!!!
         rows = G.numRows()
         cols = G.numCols()
-        row_piv, col_piv = i, j
-        count = 0
+        row_piv, col_piv = i, j # let's use readable names
+        count = 0 # set count = 0 for good coding technique
 
-        im = (i - 1) % rows
-        ip = (i + 1) % rows
-        jm = (j - 1) % cols
-        jp = (j + 1) % cols
+        #calculate offsets for nearest neighbors
+        im = (row_piv - 1) % rows
+        ip = (row_piv + 1) % rows
+        jm = (col_piv - 1) % cols
+        jp = (col_piv + 1) % cols
 
-        offsets = [(im, jm), (im, j), (im,jp),
-                      (i, jm), (i, jp), (ip, jm), (ip, j), (ip, jp)]
+        # offsets paired to represent the nearest neighbors store in list.
+        offsets = [(im, jm), (im, col_piv), (im, jp),
+                      (row_piv, jm), (row_piv, jp), (ip, jm), (ip, col_piv), (ip, jp)]
 
         # Let's look for living neighbors!!
+        # if neighbor from offset is alive, bump count by 1
         for offset in offsets:
-            #r = i + offset[0]
-            #c = j + offset[1]
-            #if (0 <= r < rows) and (0 <= c < cols ) and self.board[r, c] == LIVE_CELL:
             if self.board[offset[0], offset[1]] is LIVE_CELL:
-                count += 1
+                count += LIVE_CELL
         return count
 
 
     def nextGeneration(self):
-        # Write this function, as described in the assignment file.
-        # leave this next line at the end of this function;
-        # it's how we keep track of the generation we're 
-        # on so we can report it on the screen, but that's all it's used for.
+
+        #Do a deepcopy to insure we distinct copies in memory. Not just linked copies in memory
         self.newboard = deepcopy(self.board)
-        row, column, count = 0, 0, 0
+        row, column, count = 0, 0, 0 # Initialize values
+        #set initial row and column values
         dmaxrow = G.numRows()
         dmaxcol = G.numCols()
-
+        #Iterate thru board aand setup new board!!
         for r in range(dmaxrow):
             for c in range(dmaxcol):
                 neighbors = GOL.neighbors(self, r, c)
@@ -104,23 +105,23 @@ class GOL:
                     self.newboard[r, c] = LIVE_CELL
                 elif self.board[r, c] == DEAD_CELL and not (neighbors is 3):
                     self.newboard[r, c] = DEAD_CELL
-
+        #Overlay new board onto original board!!
         self.board = self.newboard
 
-        print 'after call to neighbors'
-        self.generation += 1
+        self.generation += 1 # track board generations
         return
 
 
     def numRows(self):
         return self.rows
 
+
     def numCols(self):
         return self.cols
 
     def isAlive(self, row, col):
         if (row>=0) and (row<self.rows) and (col>=0) and (col<self.cols):
-            if self.board[row,col]==1:
+            if self.board[row,col] == LIVE_CELL:
                 return True
         return False
 
@@ -281,6 +282,7 @@ myPlot = Plot() # This creates an object which holds the canvas widget that we d
 # when the buttons are clicked, the specified functions will be called.
 Button(text="Advance 1 generation", command=lambda:drawScreen(1)).pack()
 Button(text="Advance 10 generations", command=lambda:drawScreen(10)).pack()
+#Button(text="Advance 100 generations", command=lambda:drawScreen(100)).pack()
 
 drawScreen(0) # Draw the first generation.
 
