@@ -36,10 +36,26 @@ class GOL:
             i += 1
         infile.close()
 
+
+        def inc_cells(self, *args):
+            '''Increment any number of cells by 1 each.'''
+            for r, c in args:
+                self.board[r][c] += 1
+
+
     def neighbors(self, i, j):
         # Write this function, as described in the assignment file.
         # It should return the number of live neighbors of the
         # cell self.board[i,j].
+        for i in range(self.rows):
+            for j in range(self.cols):
+                im = (i - 1) % self.rows
+                ip = (i + 1) % self.rows
+                jm = (j - 1) % self.cols
+                jp = (j + 1) % self.cols
+
+        GOL.inc_cells((im, jm), (im, j), (im,jp),
+                      (i, jm), (i, jp), (ip, jm), (ip, j), (ip, jp))
         return 0
 
     def nextGeneration(self):
