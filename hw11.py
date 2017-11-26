@@ -3,6 +3,9 @@
 #Math 5364
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
+from copy import deepcopy
+from collections import OrderedDict
+
 
 # Define Readability constants
 LIVE_CELL = 1  # Living cell
@@ -16,6 +19,8 @@ LEFT_COLUMN = 0
 class GOL:
     def __init__(self, filename):
         self.board = {}
+        self.newboard = {}
+        self.modifiedboard = {}
         self.rows = 0
         self.cols = 0
         self.generation = 1
@@ -68,53 +73,42 @@ class GOL:
 
         # Let's look for living neighbors!!
         for offset in offsets:
-            r = rows + offset[0]
-            c = cols + offset[1]
-            if (0 <= r < rows) and (0 <= c < cols - 1) and self.board[row_piv, col_piv] == LIVE_CELL:
+            r = i + offset[0]
+            c = j + offset[1]
+            if (0 <= r < rows) and (0 <= c < cols ) and self.board[r, c] == LIVE_CELL:
                 count += 1
         return count
 
 
     def nextGeneration(self):
         # Write this function, as described in the assignment file.
-
-        # leave this next line at the end of this function; 
+        # leave this next line at the end of this function;
         # it's how we keep track of the generation we're 
         # on so we can report it on the screen, but that's all it's used for.
-        working_copy = deepcopy(self)
-        row, column, count = 0, 0, 0
-        dmaxrow = G.numRows() - 1
-        dmaxcol = G.numCols() - 1
-
-        working_copy = OrderedDict((key, self.board[key]) for key in sorted(self.board))
-        modified_copy = deepcopy(working_copy)
-
-                # Sort again for efficiency
-        modified_copy = OrderedDict((key, modified_copy[key]) for key in sorted(modified_copy))
-        for rws, colms in modified_copy.iterkeys():
-            print 'this is the Modified {} corresponding to row{} column {}'.format(modified_copy[rws, colms], rws,
-                                                                                    colms)
-        self.board = modified_copy
         self.newboard = deepcopy(self.board)
+        row, column, count = 0, 0, 0
+        dmaxrow = G.numRows()
+        dmaxcol = G.numCols()
 
-        for r in range(dmaxrow - 1):
-            for c in range(dmaxcol - 1):
+        for r in range(dmaxrow ):
+            for c in range(dmaxcol):
                 neighbors = GOL.neighbors(self, r, c)
-                if self.newboard[r, c] == LIVE_CELL and neighbors < 2:
+                if self.board[r, c] == LIVE_CELL and neighbors < 2:
                     self.newboard[r, c] = DEAD_CELL
-                elif self.newboard[r, c] == LIVE_CELL and neighbors > 4:
+                elif self.board[r, c] == LIVE_CELL and neighbors > 4:
                     self.newboard[r, c] = DEAD_CELL
-                elif self.newboard[r, c] == LIVE_CELL and (2 <= neighbors <= 3):
+                elif self.board[r, c] == LIVE_CELL and (2 <= neighbors <= 3):
                     self.newboard[r, c] = LIVE_CELL
-                elif self.newboard[r, c] == DEAD_CELL and neighbors == 3:
+                elif self.board[r, c] == DEAD_CELL and neighbors == 3:
                     self.newboard[r, c] = LIVE_CELL
-                elif self.newboard[r, c] == DEAD_CELL and not (neighbors == 3):
+                elif self.board[r, c] == DEAD_CELL and not (neighbors == 3):
                     self.newboard[r, c] = DEAD_CELL
 
         self.board = self.newboard
 
         print 'after call to neighbors'
         self.generation += 1
+        return
 
 
     def numRows(self):
@@ -278,7 +272,7 @@ def drawScreen(n):
 ###########################################
 ### Entry point. Execution begins here. ###
 ###########################################
-G = GOL("sample.txt") # Load the input file.
+G = GOL("input.txt") # Load the input file.
 
 myPlot = Plot() # This creates an object which holds the canvas widget that we draw on.
 
