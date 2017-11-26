@@ -47,12 +47,14 @@ class GOL:
         # Write this function, as described in the assignment file.
         # It should return the number of live neighbors of the
         # cell self.board[i,j].
-        for i in range(self.rows):
-            for j in range(self.cols):
-                im = (i - 1) % self.rows
-                ip = (i + 1) % self.rows
-                jm = (j - 1) % self.cols
-                jp = (j + 1) % self.cols
+        rows = G.numRows()
+        cols = G.numCols()
+        for i in range(rows):
+            for j in range(cols):
+                im = (i - 1) % rows
+                ip = (i + 1) % rows
+                jm = (j - 1) % cols
+                jp = (j + 1) % cols
 
         GOL.inc_cells((im, jm), (im, j), (im,jp),
                       (i, jm), (i, jp), (ip, jm), (ip, j), (ip, jp))
