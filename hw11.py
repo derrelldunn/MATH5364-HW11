@@ -49,6 +49,7 @@ class GOL:
         # cell self.board[i,j].
         rows = G.numRows()
         cols = G.numCols()
+        count = 0
         for i in range(rows):
             for j in range(cols):
                 im = (i - 1) % rows
@@ -56,9 +57,17 @@ class GOL:
                 jm = (j - 1) % cols
                 jp = (j + 1) % cols
 
-        GOL.inc_cells((im, jm), (im, j), (im,jp),
-                      (i, jm), (i, jp), (ip, jm), (ip, j), (ip, jp))
-        return 0
+        offsets = [(im, jm), (im, j), (im,jp),
+                      (i, jm), (i, jp), (ip, jm), (ip, j), (ip, jp)]
+
+        # Let's look for living neighbors!!
+        for offset in offsets:
+            r = rows + offset[0]
+            c = cols + offset[1]
+            if (0 <= r < rows) and (0 <= c < cols - 1) and self.board[r, c] == LIVE_CELL:
+                count += 1
+        return count
+
 
     def nextGeneration(self):
         # Write this function, as described in the assignment file.
