@@ -1,7 +1,8 @@
-# hw11.py
+# hw11-dunn.py
 #Derrell Dunn
 #Math 5364
 #UPDATED WORKING VERSION!!!!!
+#PLEASE GRADE THIS ONE!!!
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
 from copy import deepcopy
