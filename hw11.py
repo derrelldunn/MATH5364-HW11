@@ -81,6 +81,39 @@ class GOL:
         # leave this next line at the end of this function; 
         # it's how we keep track of the generation we're 
         # on so we can report it on the screen, but that's all it's used for.
+        working_copy = deepcopy(self)
+        row, column, count = 0, 0, 0
+        dmaxrow = G.numRows() - 1
+        dmaxcol = G.numCols() - 1
+
+        working_copy = OrderedDict((key, self.board[key]) for key in sorted(self.board))
+        modified_copy = deepcopy(working_copy)
+
+                # Sort again for efficiency
+        modified_copy = OrderedDict((key, modified_copy[key]) for key in sorted(modified_copy))
+        for rws, colms in modified_copy.iterkeys():
+            print 'this is the Modified {} corresponding to row{} column {}'.format(modified_copy[rws, colms], rws,
+                                                                                    colms)
+        self.board = modified_copy
+        self.newboard = deepcopy(self.board)
+
+        for r in range(dmaxrow - 1):
+            for c in range(dmaxcol - 1):
+                neighbors = GOL.neighbors(self, r, c)
+                if self.newboard[r, c] == LIVE_CELL and neighbors < 2:
+                    self.newboard[r, c] = DEAD_CELL
+                elif self.newboard[r, c] == LIVE_CELL and neighbors > 4:
+                    self.newboard[r, c] = DEAD_CELL
+                elif self.newboard[r, c] == LIVE_CELL and (2 <= neighbors <= 3):
+                    self.newboard[r, c] = LIVE_CELL
+                elif self.newboard[r, c] == DEAD_CELL and neighbors == 3:
+                    self.newboard[r, c] = LIVE_CELL
+                elif self.newboard[r, c] == DEAD_CELL and not (neighbors == 3):
+                    self.newboard[r, c] = DEAD_CELL
+
+        self.board = self.newboard
+
+        print 'after call to neighbors'
         self.generation += 1
 
 
