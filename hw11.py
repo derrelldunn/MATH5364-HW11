@@ -57,12 +57,11 @@ class GOL:
         cols = G.numCols()
         row_piv, col_piv = i, j
         count = 0
-        for i in range(rows):
-            for j in range(cols):
-                im = (i - 1) % rows
-                ip = (i + 1) % rows
-                jm = (j - 1) % cols
-                jp = (j + 1) % cols
+
+        im = (i - 1) % rows
+        ip = (i + 1) % rows
+        jm = (j - 1) % cols
+        jp = (j + 1) % cols
 
         offsets = [(im, jm), (im, j), (im,jp),
                       (i, jm), (i, jp), (ip, jm), (ip, j), (ip, jp)]
