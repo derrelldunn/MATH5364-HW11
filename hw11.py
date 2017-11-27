@@ -1,8 +1,8 @@
 # hw11-dunn.py
-#Derrell Dunn
-#Math 5364
-#UPDATED WORKING VERSION!!!!!
-#PLEASE GRADE THIS ONE!!!
+# Derrell Dunn
+# Math 5364
+# UPDATED WORKING VERSION!!!!!
+# PLEASE GRADE THIS ONE!!!
 # This is where we're getting the fancy graphics stuff we need.
 from Tkinter import *
 from copy import deepcopy
@@ -45,7 +45,7 @@ class GOL:
             for j in range(N):
                 self.board[i,j]=0
                 if thisRow[j]=='1':
-                    self.board[i,j]=LIVE_CELL
+                   self.board[i, j] = LIVE_CELL
             i += 1
         infile.close()
 
@@ -88,7 +88,7 @@ class GOL:
 
         #Do a deepcopy to insure we distinct copies in memory. Not just linked copies in memory
         self.newboard = deepcopy(self.board)
-        row, column, count = 0, 0, 0 # Initialize values
+        #row, column, count = 0, 0, 0 # Initialize values
         #set initial row and column values
         dmaxrow = G.numRows()
         dmaxcol = G.numCols()
@@ -96,15 +96,15 @@ class GOL:
         for r in range(dmaxrow):
             for c in range(dmaxcol):
                 neighbors = GOL.neighbors(self, r, c)
-                if self.board[r, c] == LIVE_CELL and neighbors < 2:
+                if self.board[r, c] is LIVE_CELL and neighbors < 2:
                     self.newboard[r, c] = DEAD_CELL
-                elif self.board[r, c] == LIVE_CELL and neighbors >= 4:
+                elif self.board[r, c] is LIVE_CELL and neighbors >= 4:
                     self.newboard[r, c] = DEAD_CELL
-                elif self.board[r, c] == LIVE_CELL and ((neighbors is 2) or (neighbors is 3)):
+                elif self.board[r, c] is LIVE_CELL and ((neighbors is 2) or (neighbors is 3)):
                     self.newboard[r, c] = LIVE_CELL
-                elif self.board[r, c] == DEAD_CELL and neighbors is 3:
+                elif self.board[r, c] is DEAD_CELL and neighbors is 3:
                     self.newboard[r, c] = LIVE_CELL
-                elif self.board[r, c] == DEAD_CELL and not (neighbors is 3):
+                elif self.board[r, c] is DEAD_CELL and not (neighbors is 3):
                     self.newboard[r, c] = DEAD_CELL
         #Overlay new board onto original board!!
         self.board = self.newboard
@@ -122,7 +122,7 @@ class GOL:
 
     def isAlive(self, row, col):
         if (row>=0) and (row<self.rows) and (col>=0) and (col<self.cols):
-            if self.board[row,col] == LIVE_CELL:
+            if self.board[row,col] is LIVE_CELL:
                 return True
         return False
 
@@ -283,7 +283,7 @@ myPlot = Plot() # This creates an object which holds the canvas widget that we d
 # when the buttons are clicked, the specified functions will be called.
 Button(text="Advance 1 generation", command=lambda:drawScreen(1)).pack()
 Button(text="Advance 10 generations", command=lambda:drawScreen(10)).pack()
-#Button(text="Advance 100 generations", command=lambda:drawScreen(100)).pack()
+#Button(text="Advance 800 generations", command=lambda:drawScreen(799)).pack()
 
 drawScreen(0) # Draw the first generation.
 
